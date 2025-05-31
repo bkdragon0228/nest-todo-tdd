@@ -13,6 +13,7 @@ export namespace Auth {
   }
   export interface SignUpResponse {
     accessToken: string;
-    refreshToken: string;
   }
+
+  export interface SignInResponse extends SignUpResponse {}
 }
