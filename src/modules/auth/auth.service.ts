@@ -1,15 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Auth } from './auth.type';
+import { Auth } from './auth.interface';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   public async signUp(
@@ -30,10 +32,15 @@ export class AuthService {
       },
     });
 
-    const accessToken = this.jwtService.sign({
-      sub: newUser.id,
-      email: newUser.email,
-    });
+    const accessToken = this.jwtService.sign(
+      {
+        sub: newUser.id,
+        email: newUser.email,
+      },
+      {
+        secret: this.configService.get<string>('JWT_SECRET') || 'secret',
+      },
+    );
 
     return {
       accessToken,
@@ -58,10 +65,15 @@ export class AuthService {
       throw new BadRequestException('Invalid password');
     }
 
-    const accessToken = this.jwtService.sign({
-      sub: user.id,
-      email: user.email,
-    });
+    const accessToken = this.jwtService.sign(
+      {
+        sub: user.id,
+        email: user.email,
+      },
+      {
+        secret: this.configService.get<string>('JWT_SECRET') || 'secret',
+      },
+    );
 
     return {
       accessToken,
