@@ -4,11 +4,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 describe('AuthService', () => {
   let service: AuthService;
   let prisma: PrismaService;
   let jwtService: JwtService;
+  let configService: ConfigService;
 
   let testRequest: { email: string; password: string };
   let testUser: {
@@ -24,6 +26,12 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
+          },
+        },
         {
           provide: PrismaService,
           useValue: {
@@ -51,6 +59,7 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
     prisma = module.get<PrismaService>(PrismaService);
     jwtService = module.get<JwtService>(JwtService);
+    configService = module.get<ConfigService>(ConfigService);
 
     testRequest = {
       email: 'test@test.com',
@@ -85,10 +94,15 @@ describe('AuthService', () => {
           password: hashedPassword,
         },
       });
-      expect(jwtService.sign).toHaveBeenCalledWith({
-        sub: testUser.id,
-        email: testUser.email,
-      });
+      expect(jwtService.sign).toHaveBeenCalledWith(
+        {
+          sub: testUser.id,
+          email: testUser.email,
+        },
+        {
+          secret: 'secret',
+        },
+      );
       expect(result).toEqual({ accessToken: testToken });
     });
 
@@ -118,10 +132,15 @@ describe('AuthService', () => {
           email: testRequest.email,
         },
       });
-      expect(jwtService.sign).toHaveBeenCalledWith({
-        sub: testUser.id,
-        email: testUser.email,
-      });
+      expect(jwtService.sign).toHaveBeenCalledWith(
+        {
+          sub: testUser.id,
+          email: testUser.email,
+        },
+        {
+          secret: 'secret',
+        },
+      );
       expect(result).toEqual({ accessToken: expectedToken });
     });
 
