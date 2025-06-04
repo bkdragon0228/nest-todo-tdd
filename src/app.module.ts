@@ -4,6 +4,7 @@ import { PrismaModule } from './modules/prisma/prisma.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
+import { TodoModule } from './modules/todo/todo.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     PrismaModule,
     AuthModule,
+    TodoModule,
   ],
   controllers: [],
   providers: [],
