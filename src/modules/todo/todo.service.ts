@@ -71,6 +71,8 @@ export class TodoService {
       throw new NotFoundException('Todo not found');
     }
     await this.prisma.todo.delete({ where: { id } });
-    return id;
+    return {
+      id,
+    };
   }
 }
