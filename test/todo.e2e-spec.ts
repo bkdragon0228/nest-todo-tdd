@@ -160,7 +160,7 @@ describe('TodoController (e2e)', () => {
         .set('Authorization', 'Bearer valid-token')
         .expect(200)
         .expect((res) => {
-          expect(res.body.id).toBe(createdTodoId);
+          expect(res.body).toBe(createdTodoId);
         });
     });
   });

@@ -151,9 +151,9 @@ describe('TodoController', () => {
 
   describe('deleteTodo', () => {
     it('should delete a todo', async () => {
-      jest.spyOn(service, 'deleteTodo').mockResolvedValue({ id: todo.id });
+      jest.spyOn(service, 'deleteTodo').mockResolvedValue(todo.id);
       const result = await controller.deleteTodo(todo.id);
-      expect(result).toEqual({ id: todo.id });
+      expect(result).toEqual(todo.id);
       expect(service.deleteTodo).toHaveBeenCalledWith(todo.id);
     });
 

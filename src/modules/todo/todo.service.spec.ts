@@ -175,7 +175,7 @@ describe('TodoService', () => {
           id: testTodo.id,
         },
       });
-      expect(result.id).toEqual(testTodo.id);
+      expect(result).toEqual(testTodo.id);
     });
 
     it('should throw an error if todo is not found', async () => {
